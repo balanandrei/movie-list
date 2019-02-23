@@ -12,14 +12,16 @@
       </figure>
     <footer>
       <p>TMDB Score: {{ vote_average }}</p>
-      <p>Genres:</p>
-      <ul>
-        <li
-        v-for="genreItem in genre" :key="genreItem.id"
-        >
-          <span>{{ genreItem.name }}</span>
-        </li>
-      </ul>
+      <div class="flexbox">
+        <p class="Genre">Genres:</p>
+        <ul>
+          <li
+          v-for="genreItem in genre" :key="genreItem.id"
+          >
+            <span>{{ genreItem.name }}</span>
+          </li>
+        </ul>
+      </div>
     </footer>
     </article>
   <div>
@@ -30,7 +32,7 @@
 <script>
 
 export default {
-  name: 'MovieItem',
+  name: 'MovieItems',
   props: ['movies', 'genres', 'imageUrl', 'rangeVal'],
   methods: {
     filterMovies(rangeVal) {
@@ -77,5 +79,9 @@ export default {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     min-height: 64px;
   }
+}
+
+.Genre {
+  margin-right: 10px;
 }
 </style>
