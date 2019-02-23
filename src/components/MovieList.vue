@@ -2,7 +2,7 @@
   <main class="Main">
     <aside class="SidebarFilters">
       <h2 class="MainTitle">Sort By:</h2>
-      <div class="">
+      <div class="SortFilter">
         <h3>Average Score:</h3>
         <div class="RangeSlider">
           <input
@@ -20,6 +20,7 @@
     <section class="MainSection">
       <h2 class="MainTitle">Movies List</h2>
       <div class="Movies">
+        <span v-if="!filterMovies(rangeVal).length">No results.</span>
         <article
           v-for="{title, poster_path, vote_average, genre, id} in filterMovies(rangeVal)"
           :key="id"
@@ -34,7 +35,6 @@
         </footer>
         </article>
     </div>
-    
     </section>
   </main>
 </template>
@@ -265,6 +265,20 @@ a {
       border-right: 7px solid #2c3e50;
       border-bottom: 7px solid transparent;
     }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .Main {
+    flex-direction: column;
+  }
+  .SidebarFilters, .MainSection {
+    width: 100%;
+  }
+  .SortFilter {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
   }
 }
 </style>
