@@ -19,39 +19,20 @@
     </aside>
     <section class="MainSection">
       <h2 class="MainTitle">Movies List</h2>
-      <div class="Movies">
-        <span v-if="!filterMovies(rangeVal).length">No results.</span>
-        <article
-          v-for="{title, poster_path, vote_average, genre, id} in filterMovies(rangeVal)"
-          :key="id"
-          class="Movie"
-          >
-          <h1 class="Movie__Title">{{ title }}</h1>
-          <figure>
-            <img :src='imageUrl + poster_path' :alt="title" />
-          </figure>
-        <footer>
-          <p>TMDB Score: {{ vote_average }}</p>
-          <p>Genres:</p>
-          <ul>
-            <li
-            v-for="genreItem in genre" :key="genreItem.id"
-            >
-              <span>{{ genreItem.name }}</span>
-            </li>
-          </ul>
-        </footer>
-        </article>
-    </div>
+      <MovieItem :movies="movies" :genres="genres" :imageUrl="imageUrl" :rangeVal="rangeVal" />
     </section>
   </main>
 </template>
 
 <script>
 import axios from 'axios';
+import MovieItem from './MovieItem.vue';
 
 export default {
   name: 'MovieList',
+  components: {
+    MovieItem
+  },
   data() {
     return {
       movies: [],
@@ -60,7 +41,6 @@ export default {
       baseUrl: 'https://api.themoviedb.org/3',
       apiKey: '0793843734f494d1e81cb086b5fd3871',
       imageUrl: 'https://image.tmdb.org/t/p/w500_and_h282_face',
-      filteredGenres: [],
     };
   },
 
@@ -74,9 +54,6 @@ export default {
         this.movies = result[1].data.results;
         this.showGenres();
       })
-    },
-    filterMovies(rangeVal) {
-      return this.movies.filter( movie => movie.vote_average >= rangeVal);
     },
     showGenres() {
       for (const j in this.movies) {
@@ -96,7 +73,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 *, *:before, *:after {
   box-sizing: border-box;
@@ -119,50 +96,6 @@ li {
 }
 a {
   color: #42b983;
-}
-
-.Movies {
-    display: grid;
-    grid-auto-flow: row;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-auto-rows: 1fr;
-    column-gap: 20px;
-}
-
-.Movie {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  h1, ul {
-    margin: 0;
-    text-align: left;
-  }
-
-  &__Title {
-    padding: 10px;
-    font-size: 17px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-  }
-
-  footer {
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    min-height: 64px;
-  }
-}
-
-.Genres {
-  display: flex;
-  flex-direction: column;
-}
-
-.Genre {
-  position: relative;
 }
 
 .flexbox {
@@ -193,50 +126,6 @@ a {
 
 .MainSection {
   width: 80%;
-}
-
-.Checkbox {
-  &Input {
-    opacity: 0;
-    position: absolute;
-    &:checked + .CheckboxLabel:before {
-      background-color: #00d671;
-      border-color: #00d671;
-      color: #fff;
-    }
-  }
-
-  &Label {
-    cursor: pointer;
-
-    &:before {
-      content: '';
-      margin-right: 10px;
-      display: inline-block;
-      vertical-align: text-top;
-      width: 20px;
-      height: 20px;
-      background: white;
-      border: 1px solid #cdcdcd;
-    }
-    &:after {
-      content: '';
-      position: absolute;
-      left: 5px;
-      top: 9px;
-      background: white;
-      width: 2px;
-      height: 2px;
-      box-shadow: 
-      2px 0 0 white,
-      4px 0 0 white,
-      4px -2px 0 white,
-      4px -4px 0 white,
-      4px -6px 0 white,
-      4px -8px 0 white;
-      transform: rotate(45deg);
-    }
-  }
 }
 
 .RangeSlider {
