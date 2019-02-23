@@ -15,10 +15,6 @@
           >
           <span class="RangeSlider__Value" v-text="rangeVal"></span>
         </div>
-        <h3>Genres:</h3>
-        <ul class="Genres">
-
-      </ul>
       </div>
     </aside>
     <section class="MainSection">
@@ -67,16 +63,17 @@ export default {
       filteredGenres: [],
     };
   },
+
   methods: {
-    getGenres() {
-      axios
-        .get(`${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=en-US`)
-        .then(response => (this.genres = response.data.genres));
-    },
-    getMovies() {
-      axios
-        .get(`${this.baseUrl}/movie/now_playing?api_key=${this.apiKey}&language=en-US&page=1&sort_by=popularity.desc`)
-        .then(response => (this.movies = response.data.results));
+    getData() {
+      let genresUrl = `${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=en-US`;
+      let moviesUrl = `${this.baseUrl}/movie/now_playing?api_key=${this.apiKey}&language=en-US&page=1&sort_by=popularity.desc`;
+      Promise.all([axios.get(genresUrl), axios.get(moviesUrl)])
+        .then((result) => {
+        this.genres = result[0].data.genres;
+        this.movies = result[1].data.results;
+        this.showGenres();
+      })
     },
     filterMovies(rangeVal) {
       return this.movies.filter( movie => movie.vote_average >= rangeVal);
@@ -90,22 +87,11 @@ export default {
           }
         }
         this.movies[j].genre = genreList;
-        console.log('movie name', this.movies[j].title);
-        console.log('movie genre', this.movies[j].genre);
-        console.log('------------------------------------');
       }
-
     },
   },
-  beforeMount() {
-    this.getGenres();
-    this.getMovies();
-  },
-  created() {
-
-  },
-  updated() {
-    this.showGenres();
+   created() {
+    this.getData();
   }
 };
 </script>
