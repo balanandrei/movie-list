@@ -34,7 +34,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .RangeSlider {
   margin-top: 15px;
 

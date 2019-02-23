@@ -42,7 +42,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .Movies {
     display: grid;
     grid-auto-flow: row;
