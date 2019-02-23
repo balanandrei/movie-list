@@ -15,6 +15,10 @@
           >
           <span class="RangeSlider__Value" v-text="rangeVal"></span>
         </div>
+        <h3>Genres:</h3>
+        <ul class="Genres">
+
+      </ul>
       </div>
     </aside>
     <section class="MainSection">
@@ -32,6 +36,14 @@
           </figure>
         <footer>
           <p>TMDB Score: {{ vote_average }}</p>
+          <p>Genres:</p>
+          <ul>
+            <li
+            v-for="genreItem in genre" :key="genreItem.id"
+            >
+              <span>{{ genreItem.name }}</span>
+            </li>
+          </ul>
         </footer>
         </article>
     </div>
@@ -47,26 +59,54 @@ export default {
   data() {
     return {
       movies: [],
+      genres: [],
       rangeVal: 3,
       baseUrl: 'https://api.themoviedb.org/3',
       apiKey: '0793843734f494d1e81cb086b5fd3871',
       imageUrl: 'https://image.tmdb.org/t/p/w500_and_h282_face',
-      selectedGenres: [],
+      filteredGenres: [],
     };
   },
   methods: {
+    getGenres() {
+      axios
+        .get(`${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=en-US`)
+        .then(response => (this.genres = response.data.genres));
+    },
     getMovies() {
       axios
         .get(`${this.baseUrl}/movie/now_playing?api_key=${this.apiKey}&language=en-US&page=1&sort_by=popularity.desc`)
         .then(response => (this.movies = response.data.results));
     },
     filterMovies(rangeVal) {
-      return this.movies.filter( movie => movie.vote_average >= rangeVal );
-    }
+      return this.movies.filter( movie => movie.vote_average >= rangeVal);
+    },
+    showGenres() {
+      for (const j in this.movies) {
+        const genreList = [];
+        for (const i in this.genres) {
+          if (this.movies[j].genre_ids.indexOf(this.genres[i].id) !== -1) {
+            genreList.push(this.genres[i]);
+          }
+        }
+        this.movies[j].genre = genreList;
+        console.log('movie name', this.movies[j].title);
+        console.log('movie genre', this.movies[j].genre);
+        console.log('------------------------------------');
+      }
+
+    },
   },
-  created() {
+  beforeMount() {
+    this.getGenres();
     this.getMovies();
   },
+  created() {
+
+  },
+  updated() {
+    this.showGenres();
+  }
 };
 </script>
 
