@@ -1,4 +1,4 @@
-# movie-list
+# VueJS app that shows the latest playing movies, using themoviedb.org API
 
 ## Project setup
 ```
